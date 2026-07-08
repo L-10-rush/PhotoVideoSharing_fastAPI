@@ -2,6 +2,9 @@
 
 Welcome to **Simple Social**, a full-stack photo and video sharing application built with a FastAPI backend and a Streamlit frontend. It supports secure JWT-based authentication, media uploads to ImageKit.io with on-the-fly transformations (including caption overlays), and a live feed where users can share and delete their own posts. 🚀
 
+This is Live and Deployed:- https://photovideosharing.streamlit.app/
+pls GO through it and Give feed back
+
 ## ✨ Features
 
 * **User Authentication** — Secure register, login, and logout via [fastapi-users](https://fastapi-users.github.io/fastapi-users/) with JWT bearer tokens.
