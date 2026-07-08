@@ -18,7 +18,17 @@ from app.users import auth_backend, current_active_user, fastapi_users
 
 from app.schemas import UserCreate, UserRead, UserUpdate
 
-from sqlalchemy.orm import selectinload 
+from sqlalchemy.orm import selectinload
+
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://photovideosharing.streamlit.app/"],  # your deployed frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @asynccontextmanager
 async def lifespan(app:FastAPI):

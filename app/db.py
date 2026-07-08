@@ -11,9 +11,13 @@ from sqlalchemy.orm import DeclarativeBase, relationship
 # IMPORT BOTH: SQLAlchemyBaseUserTableUUID (for the table) and SQLAlchemyUserDatabase (for the adapter)
 from fastapi_users.db import SQLAlchemyUserDatabase, SQLAlchemyBaseUserTableUUID
 from fastapi_users_db_sqlalchemy.generics import GUID
+ 
+import os
+DATABASE_URL = os.getenv("DATABASE_URL")
+   # Neon gives you postgresql://... — swap the driver prefix for the async one:
+if DATABASE_URL and DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
 
-
-DATABASE_URL = "sqlite+aiosqlite:///./test.db" 
 
 class Base(DeclarativeBase):
     pass
