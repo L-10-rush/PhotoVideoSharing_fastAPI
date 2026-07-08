@@ -1,4 +1,5 @@
 from collections.abc import AsyncGenerator
+from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 import uuid
 import datetime
 
@@ -17,6 +18,10 @@ DATABASE_URL = os.getenv("DATABASE_URL")
    # Neon gives you postgresql://... — swap the driver prefix for the async one:
 if DATABASE_URL and DATABASE_URL.startswith("postgresql://"):
     DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
+    parsed = urlparse(DATABASE_URL)
+    query = parse_qs(parsed.query)
+    query.pop("sslmode", None)
+    DATABASE_URL = urlunparse(parsed._replace(query=urlencode(query, doseq=True)))
 
 
 class Base(DeclarativeBase):
@@ -40,7 +45,7 @@ class Post(Base):
 
     user = relationship("User", back_populates="posts")
 
-engine = create_async_engine(DATABASE_URL)
+engine = create_async_engine(DATABASE_URL, connect_args={"ssl": True})
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
 async def create_db_and_tables():
