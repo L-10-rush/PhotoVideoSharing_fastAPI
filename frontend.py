@@ -110,11 +110,20 @@ def upload_page():
                     timeout=REQUEST_TIMEOUT,
                 )
 
+                # if response.status_code == 200:
+                #     st.success("Posted!")
+                #     st.rerun()
+                # else:
+                #     st.error("Upload failed!")
                 if response.status_code == 200:
                     st.success("Posted!")
                     st.rerun()
                 else:
-                    st.error("Upload failed!")
+                    try:
+                        detail = response.json().get("detail", response.text)
+                    except Exception:
+                        detail = response.text
+                    st.error(f"Upload failed: {detail}")
             except requests.exceptions.RequestException as e:
                 st.error(f"Couldn't reach the server: {e}")
 
