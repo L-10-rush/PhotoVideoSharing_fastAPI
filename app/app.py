@@ -32,7 +32,9 @@ app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://photovideosharing.streamlit.app/"],  # your deployed frontend URL
+    # No trailing slash — browsers send the Origin header without one,
+    # so "https://x.streamlit.app/" would never match and CORS would silently reject every request.
+    allow_origins=["https://photovideosharing.streamlit.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -132,38 +134,3 @@ async def delete_post(post_id: str, session: AsyncSession = Depends(get_async_se
         return {"success": True, "message": "Post deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-
-#this is the endpoint 
-# @app.get("/hello-world") #this is the decorator
-# def hello_world():
-#     return {"message":"Hello World"} #json ->Javascript Object Notation
-# text_posts = {
-#     1: {"title": "New Post", "content": "cool test post"},
-#     2: {"title": "Hello World", "content": "This is my first real post!"},
-#     3: {"title": "Python Tips", "content": "Remember to use list comprehensions for cleaner code."},
-#     4: {"title": "Weather Update", "content": "It's sunny today with a chance of rain."},
-#     5: {"title": "Book Review", "content": "Just finished reading 'Atomic Habits' - highly recommend!"},
-#     6: {"title": "Coding Challenge", "content": "Try to solve the FizzBuzz problem in one line."},
-#     7: {"title": "Weekend Plans", "content": "Going hiking with friends, can't wait!"},
-#     8: {"title": "New Recipe", "content": "Tried making homemade pasta – it was delicious!"},
-#     9: {"title": "Tech News", "content": "New AI model released that can generate music."},
-#     10: {"title": "Motivation", "content": "Keep pushing forward, every step counts."}
-# }
-# @app.get("/posts") #path parameter
-# def get_all_post(limit: int = None):
-#     if limit:
-#         return list(text_posts.values())[:limit]
-#     return text_posts
-
-# @app.get("/posts/{id}") #query parameter
-# def get_post(id: int) -> PostResponse:
-#     if id not in text_posts:
-#         raise HTTPException(status_code=404, detail="Post not found") # raise the http exception 
-#     return text_posts.get(id)
-
-# @app.post("/posts") #request body in this if we have to send file we will use schemas
-# def create_post( post: PostCreate) -> PostResponse: 
-#     new_post =  {"title":post.title, "content": post.content}
-#     text_posts[max(text_posts.keys()) + 1] = new_post
-#     return new_post
